@@ -4,10 +4,12 @@ var path = require('path')
   , port = 8000
   , admin = {
     "role": "admin",
-    "email": "thinkerton5@gmail.com",
-    "password": "password1",
-    "name": "John Barnack"
+    "email": "bqchristie@gmail.com",
+    "password": "fyah1234",
+    "name": "Bruce Christie"
   }
+
+var session = require('express-session');
 
 var config = {
   development: {
@@ -16,7 +18,7 @@ var config = {
       name: 'express-mongoose-api-seed'
     },
     port: port,
-    db: 'mongodb://localhost/db-development',
+    db: 'mongodb://pebbl:fyah1234@ds043012.mlab.com:43012/sandbox',
     admin: admin,
   },
 
