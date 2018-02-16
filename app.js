@@ -1,46 +1,47 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+var config   = require('./config')
+  , express  = require('express')
+  , mongoose = require('mongoose')
+  , fs       = require('fs')
+  , db       = {}
 
-var index = require('./routes/index');
-var users = require('./routes/users');
+// connect mongoose
+mongoose.connect(config.db, { server: { keepAlive: 1, auto_reconnect: true } })
+var conn = mongoose.connection
 
-var app = express();
+// mongoose connection 'error'
+conn.on('error', function () {
+  console.log('\nMongoose failed to connect:', config.db)
+  mongoose.disconnect()
+})
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+// mongoose connection 'open'
+conn.on('open', function () {
+  console.log('\nMongoose connection opened:', config.db)
+  
+  // config mongoose models
+  var modelsPath = __dirname + '/app/models'
+  fs.readdirSync(modelsPath).forEach(function (file) {
+    if (file.indexOf('.js') >= 0) 
+      db[file.replace('.js', '')] = require(modelsPath + '/' + file)(mongoose, config)
+  })
+  
+  // config Nomadic Fitness affiliate and admin
+  require('./config/admin')(config, db)
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+  // create app
+  var app   = express()
+    , http  = require('http').createServer(app)
 
-app.use('/', index);
-app.use('/users', users);
+  // config app
+  require('./config/express')(app, config)
+  require('./config/routes')(app, http, db)
+  
+  app.get('/', function (req, res) {
+    res.render('index')
+  })
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
-
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
-
-module.exports = app;
+  // serve app
+  http.listen(config.port, function () {
+    console.log("Nomadic Fitness API running at http://" + config.host + ":" + config.port)
+  })
+})
