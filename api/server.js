@@ -1,4 +1,5 @@
-var express = require('express'),
+var config = require('./config/config')
+    express = require('express'),
     app = express(),
     port = process.env.PORT || 3000,
     mongoose = require('mongoose'),
@@ -9,14 +10,12 @@ var express = require('express'),
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json());
 
-app.apiPath ='/api/v1';
-
-routes(app);
+routes(app, config);
 
 
 // mongoose instance connection url connection
 //mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://admin:admin@ds239988.mlab.com:39988/pebbl').then(function(){
+mongoose.connect(config.mongo.getURL()).then(function(){
     console.log('done connecting');
 }).catch(function(err){
     console.log(err);
