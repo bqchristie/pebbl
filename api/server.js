@@ -1,6 +1,7 @@
 var config = require('./config/config')
     express = require('express'),
     app = express(),
+    cors = require('cors'),
     port = process.env.PORT || 3000,
     mongoose = require('mongoose'),
     Task = require('./models/board'), //created model loading here
@@ -9,6 +10,12 @@ var config = require('./config/config')
 
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json());
+
+app.all('/*', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    next();
+});
 
 routes(app, config);
 
