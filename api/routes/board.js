@@ -5,6 +5,7 @@
 
 module.exports = function(app, config) {
     var board = require('../controllers/board');
+    var list = require('../controllers/list');
     var path = config.api.path + config.api.version;
 
     // board Routes
@@ -13,8 +14,12 @@ module.exports = function(app, config) {
         .post(board.create);
 
 
-    app.route('/board/:boardId')
+    app.route(path + '/board/:boardId')
         .get(board.read)
         .put(board.update)
         .delete(board.delete);
+
+    app.route(path + '/board/:boardId/list')
+        .get(board.read)
+        .post(list.create)
 };
