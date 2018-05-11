@@ -42,7 +42,7 @@ exports.update = function(req, res) {
 
 exports.delete = function(req, res) {
 
-
+    console.log('Trying to delete this thing');
     Board.remove({
         _id: req.params.boardId
     }, function(err, board) {

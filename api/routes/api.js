@@ -7,6 +7,8 @@ module.exports = function(app, config) {
     var board = require('../controllers/board');
     var list = require('../controllers/list');
     var card = require('../controllers/card');
+    var security = require('../controllers/security');
+
     var path = config.api.path + config.api.version;
 
     // board Routes
@@ -21,8 +23,13 @@ module.exports = function(app, config) {
         .delete(board.delete);
 
     app.route(path + '/board/:boardId/list')
-        .post(list.create)
+        .post(list.create);
 
     app.route(path + '/board/:boardId/list/:listId/card')
-        .post(card.create)
+        .post(card.create);
+
+    //Security
+    app.route( path  + '/login')
+        .post(security.login);
+
 };

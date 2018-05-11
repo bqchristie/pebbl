@@ -6,7 +6,7 @@ var config = require('./config/config')
     mongoose = require('mongoose'),
     Task = require('./models/board'), //created model loading here
     bodyParser = require('body-parser'),
-    routes = require('./routes/board');
+    routes = require('./routes/api');
 
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json());
@@ -18,6 +18,7 @@ app.all('/*', function(req, res, next) {
 });
 
 routes(app, config);
+
 
 
 // mongoose instance connection url connection
