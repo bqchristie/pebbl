@@ -1,5 +1,5 @@
 let config = require('../config/config');
-let List = require('./List'); //created model loading here
+let List = require('./list'); //created model loading here
 let mongoose = require('mongoose');
 let faker = require('faker');
 
