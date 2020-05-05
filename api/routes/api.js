@@ -4,32 +4,28 @@
 'use strict';
 
 module.exports = function(app, config) {
-    var board = require('../controllers/board');
-    var list = require('../controllers/list');
-    var card = require('../controllers/card');
-    var security = require('../controllers/security');
+    const user = require('../controllers/user');
+    const list = require('../controllers/list');
 
-    var path = config.api.path + config.api.version;
+    const path = config.api.path + config.api.version;
 
-    // board Routes
-    app.route( path  + '/board')
-        .get(board.list)
-        .post(board.create);
+    app.route( path  + '/user')
+        .get(user.list)
+        .post(user.create)
+        .put(user.update);
 
+    app.route( path  + '/user/:id')
+        .get(user.read)
+        .delete(user.delete);
 
-    app.route(path + '/board/:boardId')
-        .get(board.read)
-        .put(board.update)
-        .delete(board.delete);
+    app.route(path + '/list')
+        .get(list.list)
+        .put(list.save)
 
-    app.route(path + '/board/:boardId/list')
         .post(list.create);
 
-    app.route(path + '/board/:boardId/list/:listId/card')
-        .post(card.create);
-
-    //Security
-    app.route( path  + '/login')
-        .post(security.login);
+    app.route(path + '/list/:id')
+        .delete(list.delete)
+        .get(list.read);
 
 };
