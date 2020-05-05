@@ -2,7 +2,7 @@ var config = require('./config/config')
 express = require('express'),
     app = express(),
     cors = require('cors'),
-    port = process.env.PORT || 3000,
+    port = process.env.PORT || 80,
     mongoose = require('mongoose'),
     require('./models/user'), //created model loading here
     require('./models/list'), //created model loading here
